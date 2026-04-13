@@ -24,7 +24,7 @@ export default function Auth() {
           <div className="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-600">
             <Activity className="w-12 h-12" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900">HealthScan</h1>
+          <h1 className="text-4xl font-bold text-slate-900">VEMA Health</h1>
           <p className="text-slate-500 text-lg">
             Empowering you to take control of your health with AI-powered scanning and doctor collaboration.
           </p>
