@@ -1,0 +1,197 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information and medical history summary.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "doctor"], "description": "User role (user or doctor)" },
+        "allergies": { "type": "string" },
+        "weight": { "type": "string" },
+        "age": { "type": "string" },
+        "height": { "type": "string" },
+        "exercise": { "type": "string" },
+        "medicalHistory": { "type": "string" },
+        "medicalPlan": { "type": "string", "description": "Connected medical plan (e.g. Kaiser, Sutter Health)" },
+        "setupComplete": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Issue": {
+      "title": "Issue",
+      "description": "A health issue folder to track progress over time.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "status"]
+    },
+    "Scan": {
+      "title": "Scan",
+      "description": "A health scan consisting of multiple photos and AI analysis.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "issueId": { "type": "string", "description": "Optional link to an Issue folder." },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" }, "description": "Base64 encoded images or storage URLs." },
+        "aiAnalysis": { "type": "string" },
+        "doctorResponse": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "analyzed", "doctor-reviewed"] },
+        "sharedWith": { "type": "array", "items": { "type": "string" }, "description": "IDs of experts this scan is shared with." },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "images", "status", "createdAt"]
+    },
+    "Expert": {
+      "title": "Expert",
+      "description": "A healthcare professional or expert.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "specialty": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "integer" },
+        "bio": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "pricingPlan": { "type": "string", "description": "Consultation pricing (e.g. $50/session)" }
+      },
+      "required": ["name", "specialty"]
+    },
+    "ConsultationRequest": {
+      "title": "ConsultationRequest",
+      "description": "A request from a user to consult with an expert.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "expertId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "expertId", "status", "createdAt"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "A chat session between a user and an expert.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participants", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A single message in a conversation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "conversationId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["conversationId", "senderId", "text", "createdAt"]
+    },
+    "ForumPost": {
+      "title": "ForumPost",
+      "description": "A post in the health forum.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "isDoctor": { "type": "boolean" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "category", "title", "content", "createdAt"]
+    },
+    "ForumComment": {
+      "title": "ForumComment",
+      "description": "A comment on a forum post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "postId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "isDoctor": { "type": "boolean" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "userId", "content", "createdAt"]
+    },
+    "SymptomLog": {
+      "title": "SymptomLog",
+      "description": "A daily log of symptoms, pain levels, and observations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "issueId": { "type": "string", "description": "Optional link to a specific health issue folder." },
+        "symptoms": { "type": "array", "items": { "type": "string" } },
+        "painLevel": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "observations": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "painLevel", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and medical history."
+    },
+    "/issues/{issueId}": {
+      "schema": "Issue",
+      "description": "Health issue folders."
+    },
+    "/scans/{scanId}": {
+      "schema": "Scan",
+      "description": "Health scans uploaded by users."
+    },
+    "/experts/{expertId}": {
+      "schema": "Expert",
+      "description": "Healthcare experts."
+    },
+    "/conversations/{conversationId}": {
+      "schema": "Conversation",
+      "description": "Chat conversations."
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Messages in a conversation."
+    },
+    "/forum_posts/{postId}": {
+      "schema": "ForumPost",
+      "description": "Forum posts."
+    },
+    "/forum_posts/{postId}/comments/{commentId}": {
+      "schema": "ForumComment",
+      "description": "Comments on forum posts."
+    },
+    "/symptom_logs/{logId}": {
+      "schema": "SymptomLog",
+      "description": "Daily symptom and pain logs."
+    }
+  }
+}
