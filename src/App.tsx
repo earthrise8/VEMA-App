@@ -27,6 +27,26 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(8);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingProgress(100);
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 92) {
+          return prev;
+        }
+        const next = prev + Math.max(1, (95 - prev) * 0.08);
+        return Math.min(92, next);
+      });
+    }, 180);
+
+    return () => window.clearInterval(intervalId);
+  }, [loading]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -70,6 +90,7 @@ export default function App() {
       } else {
         setProfile(null);
       }
+      setLoadingProgress(100);
       setLoading(false);
     });
 
@@ -78,8 +99,21 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-white p-4">
+        <div className="w-full max-w-sm flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="w-full mt-6">
+            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-600 transition-all duration-300 ease-out"
+                style={{ width: `${Math.round(loadingProgress)}%` }}
+              ></div>
+            </div>
+            <p className="text-sm text-slate-500 mt-3 text-center">
+              Loading your health dashboard... {Math.round(loadingProgress)}%
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
