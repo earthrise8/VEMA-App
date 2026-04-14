@@ -50,48 +50,54 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        const docRef = doc(db, 'users', user.uid);
-        let docSnap;
-        try {
-          docSnap = await getDoc(docRef);
-        } catch (error) {
-          handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
-        }
-        
-        if (docSnap && docSnap.exists()) {
-          const data = docSnap.data();
-          // For testing: set admin as doctor
-          if (user.email === 'flyingpig071@gmail.com' && data.role !== 'doctor') {
-            const updatedProfile = { ...data, role: 'doctor' };
-            await setDoc(docRef, updatedProfile);
-            setProfile(updatedProfile);
+      try {
+        setUser(user);
+        if (user) {
+          const docRef = doc(db, 'users', user.uid);
+          let docSnap;
+          try {
+            docSnap = await getDoc(docRef);
+          } catch (error) {
+            handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
+          }
+          
+          if (docSnap && docSnap.exists()) {
+            const data = docSnap.data();
+            // For testing: set admin as doctor
+            if (user.email === 'flyingpig071@gmail.com' && data.role !== 'doctor') {
+              const updatedProfile = { ...data, role: 'doctor' };
+              await setDoc(docRef, updatedProfile);
+              setProfile(updatedProfile);
+            } else {
+              setProfile(data);
+            }
           } else {
-            setProfile(data);
+            const newProfile = {
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName,
+              medicalHistory: '',
+              setupComplete: false,
+              role: user.email === 'flyingpig071@gmail.com' ? 'doctor' : 'user',
+              createdAt: new Date().toISOString(),
+            };
+            try {
+              await setDoc(docRef, newProfile);
+              setProfile(newProfile);
+            } catch (error) {
+              handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}`);
+            }
           }
         } else {
-          const newProfile = {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            medicalHistory: '',
-            setupComplete: false,
-            role: user.email === 'flyingpig071@gmail.com' ? 'doctor' : 'user',
-            createdAt: new Date().toISOString(),
-          };
-          try {
-            await setDoc(docRef, newProfile);
-            setProfile(newProfile);
-          } catch (error) {
-            handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}`);
-          }
+          setProfile(null);
         }
-      } else {
+      } catch (error) {
+        console.error('App initialization error:', error);
         setProfile(null);
+      } finally {
+        setLoadingProgress(100);
+        setLoading(false);
       }
-      setLoadingProgress(100);
-      setLoading(false);
     });
 
     return () => unsubscribe();

@@ -16,8 +16,59 @@ View your app in AI Studio: https://ai.studio/apps/9e446d6a-b49b-4b6e-ba0c-9664b
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+3. Optionally set `GEMINI_MODEL` in [.env.local](.env.local) if you want to override the default backend model.
+4. Start the Gemini API server:
+   `npm run server`
+5. Run the app in a second terminal:
    `npm run dev`
+
+### Gemini setup
+
+The frontend no longer talks to Gemini directly. It calls a backend endpoint at `/api/analyze`, which keeps your API key off the client bundle.
+
+If you deploy the backend on a separate host, set `VITE_API_BASE_URL` in [.env.local](.env.local) to that URL.
+
+## Firestore Setup (Required For Data To Load)
+
+If pages like Recent Scans, Communications, or Symptoms stay empty/loading, it usually means Firestore is not fully configured yet.
+
+### 1) Create Firestore database
+
+1. Open Firebase Console for project `vema-79202`.
+2. Go to **Firestore Database** and click **Create database**.
+3. Use **Production mode** and pick your region.
+
+### 2) Enable Authentication
+
+1. Go to **Authentication** > **Sign-in method**.
+2. Enable **Google** provider.
+3. Add your app domain(s) to authorized domains.
+
+### 3) Deploy rules and indexes
+
+This repo includes:
+- `firestore.rules`
+- `firestore.indexes.json`
+
+Deploy both with Firebase CLI:
+
+1. `npm install -g firebase-tools`
+2. `firebase login`
+3. `firebase use vema-79202`
+4. `firebase deploy --only firestore:rules,firestore:indexes`
+
+### 4) Seed required data
+
+The Communications page reads from `experts`. Non-admin users cannot write experts by rule, so create at least one expert document manually in Firestore Console:
+
+Collection: `experts`
+- `name` (string)
+- `specialty` (string)
+- `rating` (number)
+- `reviewCount` (number)
+- `bio` (string)
+- `photoUrl` (string)
+- `pricingPlan` (string)
 
 ## Deploy to GitHub Pages
 
