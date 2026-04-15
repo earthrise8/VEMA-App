@@ -1,5 +1,5 @@
 {
-  "name": "VEMA Health",
-  "description": "Visual Enhancement and Medical AI - A health app for self-diagnosis and doctor sharing using photo-to-3D scanning and AI analysis.",
+  "name": "VENA Health",
+  "description": "Visual Enhancement and Nir Assistance - A health app for self-diagnosis and doctor sharing using photo-to-3D scanning and AI analysis.",
   "requestFramePermissions": ["camera"]
 }

@@ -22,7 +22,7 @@ export default function SetupWalkthrough({ onComplete }: SetupProps) {
 
   const steps = [
     {
-      title: "Welcome to VEMA Health",
+      title: "Welcome to VENA Health",
       description: "Let's set up your health profile to give you better AI insights.",
       icon: Heart,
       fields: []

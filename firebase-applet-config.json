@@ -1,10 +1,10 @@
 {
-  "projectId": "vema-79202",
+  "projectId": "vena-79202",
   "appId": "1:15513533607:web:398a5ebdef010cc38b2f82",
   "apiKey": "AIzaSyA1n5--UKpENVBPmzHNR5uKjEhQxCfLDXU",
-  "authDomain": "vema-79202.firebaseapp.com",
+  "authDomain": "vena-79202.firebaseapp.com",
   "firestoreDatabaseId": "(default)",
-  "storageBucket": "vema-79202.firebasestorage.app",
+  "storageBucket": "vena-79202.firebasestorage.app",
   "messagingSenderId": "15513533607",
   "measurementId": "G-Q16L2D9WT7"
 }
