@@ -30,6 +30,12 @@ export default function Auth() {
         return;
       }
 
+      const message = (error?.message as string | undefined) || '';
+      if (message.includes('redirect_uri_mismatch')) {
+        setAuthError('Google sign-in redirect mismatch. In Firebase Console, enable Google provider and add this app domain to Authorized domains, then try again.');
+        return;
+      }
+
       setAuthError('Unable to sign in right now. Please try again.');
     }
   };

@@ -34,7 +34,7 @@ If pages like Recent Scans, Communications, or Symptoms stay empty/loading, it u
 
 ### 1) Create Firestore database
 
-1. Open Firebase Console for project `vena-79202`.
+1. Open Firebase Console for project `vema-79202`.
 2. Go to **Firestore Database** and click **Create database**.
 3. Use **Production mode** and pick your region.
 
@@ -54,7 +54,7 @@ Deploy both with Firebase CLI:
 
 1. `npm install -g firebase-tools`
 2. `firebase login`
-3. `firebase use vena-79202`
+3. `firebase use vema-79202`
 4. `firebase deploy --only firestore:rules,firestore:indexes`
 
 ### 4) Seed required data
